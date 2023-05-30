@@ -1,0 +1,80 @@
+uracil:
+  model_config:
+    z_hidden_dim: 256
+    k_tuple_dim: 512
+    block_num: 4
+
+
+ethanol:
+  model_config:
+    z_hidden_dim: 256
+    k_tuple_dim: 512
+    block_num: 5
+
+
+
+'revised aspirin':
+  model_config:
+    block_num: 5
+  optimizer_config:
+    learning_rate: 0.99
+
+
+'revised azobenzene':
+  model_config:
+    block_num: 6
+  optimizer_config:
+    learning_rate: 0.999
+
+'revised benzene':
+  model_config:
+    block_num: 5
+  optimizer_config:
+    learning_rate: 0.99
+
+
+'revised ethanol':
+  model_config:
+    block_num: 6
+  optimizer_config:
+    learning_rate: 0.999
+
+
+'revised malonaldehyde':
+  model_config:
+    block_num: 6
+  optimizer_config:
+    learning_rate: 0.999
+
+
+'revised naphthalene':
+  model_config:
+    block_num: 6
+  optimizer_config:
+    learning_rate: 0.999
+
+
+'revised paracetamol':
+  model_config:
+    block_num: 6
+  optimizer_config:
+    learning_rate: 0.999
+
+'revised salicylic acid':
+  model_config:
+    block_num: 6
+  optimizer_config:
+    learning_rate: 0.999
+
+
+'revised toluene':
+  model_config:
+    block_num: 5
+  optimizer_config:
+    learning_rate: 0.99
+
+'revised uracil':
+  model_config:
+    block_num: 5
+  optimizer_config:
+    learning_rate: 0.99

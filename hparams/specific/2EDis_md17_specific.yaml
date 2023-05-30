@@ -1,0 +1,7 @@
+# for 2EDis
+naphtalene:
+  model_config:
+    use_concat: true
+benzene:
+  model_config:
+    use_concat: true

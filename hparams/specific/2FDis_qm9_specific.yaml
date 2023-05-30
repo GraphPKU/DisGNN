@@ -1,0 +1,42 @@
+"1":
+  optimizer_config:
+    learning_rate: 0.0002
+
+
+"2":
+  model_config:
+    block_num: 6
+    interaction_residual: false
+
+
+
+"11":
+  optimizer_config:
+    learning_rate: 0.0002
+
+
+"12":
+  optimizer_config:
+    learning_rate: 0.0002
+  model_config:
+    block_num: 6
+    interaction_residual: false
+
+"13":
+  optimizer_config:
+    learning_rate: 0.0001
+  model_config:
+    block_num: 6
+    interaction_residual: false
+
+"14":
+  model_config:
+    block_num: 6
+    interaction_residual: false
+
+"15":
+  optimizer_config:
+    learning_rate: 0.0002
+  model_config:
+    block_num: 6
+    interaction_residual: false

@@ -1,0 +1,44 @@
+# training config
+global_config:
+    seed: 0
+    
+trainer_config: 
+    max_epochs: 6000
+    validation_interval: 2
+    early_stopping_patience: 100
+    
+data_config:  
+    train_batch_size: 2
+    val_batch_size: 16
+    test_batch_size: 16
+
+scheduler_config:
+    RLROP_factor: 0.5
+    RLROP_patience: 25
+    RLROP_cooldown: 25
+    RLROP_threshold: 0.001
+    EXLR_gamma: 0.999
+    warmup_epoch: 25
+
+optimizer_config:
+    learning_rate: 0.001
+    force_ratio: 0.999
+    gradient_clip_val: 10
+    ema_decay: 0.99
+    weight_decay: 0.0
+
+# model_config
+model_config:
+    rbf: nexpnorm
+    max_z: 20
+    rbf_trainable: false
+    rbound_upper: 10
+    z_hidden_dim: 320
+    ef_dim: 16
+    k_tuple_dim: 320
+    pooling_level: middle # low middle high
+    e_mode: E # E, e, null
+    block_num: 4
+
+
+
