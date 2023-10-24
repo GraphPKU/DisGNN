@@ -47,7 +47,7 @@ class Residual(nn.Module):
         activation_fn: torch.nn.Module = None,
         bias: bool = True,
         add_end_activation: bool = True,
-        use_layer_norm = False
+        use_layer_norm = False,
     ):
         super().__init__()
         assert mlp_num > 0
@@ -61,10 +61,9 @@ class Residual(nn.Module):
             ],
             Dense(hidden_dim, hidden_dim, bias=bias, activation_fn=end_activation_fn, use_layer_norm=use_layer_norm)
             )
-        self.layer_norm = nn.LayerNorm(hidden_dim) if use_layer_norm else nn.Identity()
             
     def forward(self, x: torch.Tensor):
-        return self.layer_norm(self.mlps(x) + x)
+        return self.mlps(x) + x
     
     
 

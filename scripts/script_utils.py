@@ -1,11 +1,14 @@
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
-from pytorch_lightning.loggers import TensorBoardLogger
+from pytorch_lightning.loggers import TensorBoardLogger, WandbLogger
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
 from yacs.config import load_cfg
-from models.basic_callbacks import basic_train_callback
+from lightningModule.basic_callbacks import basic_train_callback
 from typing import List, Optional
+import sys
+sys.path.append(".")
+
 
 
 
@@ -18,15 +21,33 @@ def trainer_setup(
     devices: List[int] = [0],
     max_epochs: int = 3000,
     log_every_n_steps: int = 10,
-    accelerator: str = "gpu"
+    accelerator: str = "gpu",
+    use_wandb: bool = False,
+    proj_name: Optional[str] = None,
+    data_name: Optional[str] = None,
+    num_sanity_val_steps: int = 2
     ):
 
     # config logger
-    logger = TensorBoardLogger(
-        "logs", 
-        name=log_path, 
-        version=version
+    if use_wandb:
+        assert proj_name is not None, "proj_name should not be None when use_wandb is True"
+        assert data_name is not None, "data_name should not be None when use_wandb is True"
+        run_name = "{}-{}".format(data_name, version)
+        run_name = run_name.replace(" ", "-")
+        logger = WandbLogger(
+            save_dir="logs",
+            project=proj_name,
+            name=run_name,
+            log_model=True,
+            version=run_name,
         )
+        
+    else:
+        logger = TensorBoardLogger(
+            "logs", 
+            name=log_path, 
+            version=version
+            )
     
     # callback functions
     monitor = "val_loss/val_loss"
@@ -47,7 +68,8 @@ def trainer_setup(
             strategy="ddp",
             check_val_every_n_epoch=validation_interval,
             enable_model_summary=enable_model_summary,
-            reload_dataloaders_every_n_epochs=1
+            reload_dataloaders_every_n_epochs=1,
+            num_sanity_val_steps=num_sanity_val_steps
             )       
     else: 
         # initilize trainer.
@@ -61,6 +83,7 @@ def trainer_setup(
             check_val_every_n_epoch=validation_interval,
             enable_model_summary=enable_model_summary,
             reload_dataloaders_every_n_epochs=1,
+            num_sanity_val_steps=num_sanity_val_steps
             )    
     return trainer
 
@@ -72,7 +95,6 @@ def train(
     val_dataloader: DataLoader,
     resume: bool = False,
     ckpt_path: Optional[str] = None,
-    num_sanity_val_steps: int = 2
     ):
     if not resume:
         ckpt_path = None
@@ -95,8 +117,8 @@ def test(
     ):
     
     if not only_test:
-        # use the last ckpt
-        ckpt_path = "last"
+        # use the best ckpt
+        ckpt_path = "best"
         
     model.test_dataset_name = test_dataset_name
     

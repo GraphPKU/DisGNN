@@ -3,9 +3,9 @@ global_config:
     seed: 0
 
 trainer_config:
-    max_epochs: 6000
+    max_epochs: 8000
     validation_interval: 2
-    early_stopping_patience: 100
+    early_stopping_patience: 150
 
 data_config:
     train_batch_size: 2
@@ -13,9 +13,9 @@ data_config:
     test_batch_size: 32
 
 scheduler_config:
-    RLROP_factor: 0.5
-    RLROP_patience: 25
-    RLROP_cooldown: 25
+    RLROP_factor: 0.7
+    RLROP_patience: 15
+    RLROP_cooldown: 15
     RLROP_threshold: 0.001
     EXLR_gamma: 0.999
     warmup_epoch: 25
@@ -37,9 +37,9 @@ model_config:
     ef_dim: 16
     k_tuple_dim: 512
     block_num: 5
-    interaction_residual: true
-
-
+    use_mult_lin: False
+    activation_fn_name: silu
+    interaction_residual: false
 
 
 

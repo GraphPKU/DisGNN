@@ -1,13 +1,13 @@
 import torch
-torch.set_float32_matmul_precision("highest")
 import sys, os
+os.chdir("/home/lizian/codes/DisGNN_github")
 sys.path.append(".")
 import pytorch_lightning as pl
 import time
 from argparse import ArgumentParser
 from scripts.script_utils import trainer_setup, test, train, get_cfgs
 from utils.select_free_gpu import select_free_gpu
-from models.kDisGNN_model import LitkDis
+from lightningModule.MD_module import MD_module
 from datasets.MD17 import md17_datawork
 from datasets.QM9 import qm9_datawork
 
@@ -24,6 +24,8 @@ parser.add_argument("--version", default="NO_VERSION")
 parser.add_argument("--resume", action="store_true")
 parser.add_argument("--only_test", action="store_true")
 parser.add_argument("--ckpt", default=None)
+parser.add_argument("--use_wandb", action="store_true")
+parser.add_argument("--proj_name", default=None)
 parser.add_argument("--merge", nargs="+", type=str, default=None)
 
 
@@ -91,7 +93,7 @@ test_batch_size = data_config.test_batch_size
     get model class
 '''
 
-model = LitkDis
+model = MD_module
 
 '''
     train start
@@ -123,11 +125,13 @@ train_dl, val_dl, test_dl, global_y_mean, global_y_std = datawork(
     prepare model
 '''
 
-if only_test or resume:
+if only_test or resume and checkpoint_path is not None:
     model_instance = model.load_from_checkpoint(
         checkpoint_path=checkpoint_path
         )
 else:
+    if (only_test or resume):
+        print("WARNING: You are resuming but not specifying any ckpt.")
     model_instance = model(
         model_name=model_name,
         model_config=model_config, 
@@ -159,7 +163,10 @@ trainer = trainer_setup(
     validation_interval=validation_interval,
     devices=devices,
     log_every_n_steps=log_every_n_steps,
-    accelerator=accelerator
+    accelerator=accelerator,
+    use_wandb=args.use_wandb,
+    proj_name=args.proj_name if args.proj_name is not None else f"{model_name}_{dataset_name}",
+    data_name=data_name,
 )
 
 

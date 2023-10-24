@@ -7,11 +7,16 @@ from torch_geometric.data import Data
 from typing import Callable
 import random
 
-def collate_fn(batch, y_index=0):
+def collate_(batch, y_index=0):
+    # avoid forming the batch indice.
     data = batch[0]
-    data.y = data.y.squeeze(dim=1)[:, y_index]
-
+    try:
+        data.y = data.y.squeeze(dim=1)[:, y_index]
+    except:
+        pass
     return data
+
+
 
 def group_same_size(
     dataset: Data,
@@ -37,7 +42,6 @@ def batch_same_size(
     grouped_dataset: Data,
     batch_size: int,
 ):
-            
     # batched dataset, according to the batch size. 
     batched_dataset = []
     for size, group in grouped_dataset:
@@ -50,7 +54,6 @@ def batch_same_size(
             y = torch.cat([batch[i].y.unsqueeze(0) for i in range(len(batch))], dim=0)
             z = torch.cat([batch[i].z.unsqueeze(0) for i in range(len(batch))], dim=0)
             pos = torch.cat([batch[i].pos.unsqueeze(0) for i in range(len(batch))], dim=0)
-            
             batched_dataset.append(
                 Data(
                     y=y, 
@@ -67,12 +70,10 @@ class batched_QM9(qm9.QM9):
                     pre_transform: Optional[Callable] = None,
                     pre_filter: Optional[Callable] = None,
                     batch_size: int = None,
-                    indices: List[int] = None,
-                    processed_file_name_suffix: str = None):
+                    indices: List[int] = None):
         self.size = len(indices)
         self.batch_size = batch_size
         self.flag = False
-        self.processed_file_name_suffix = processed_file_name_suffix
         super().__init__(root, transform, pre_transform, pre_filter)
         # To batch train/val/test data respectively. For using, please set the indices of the data.
         self.subdataset = self[indices]
@@ -108,6 +109,7 @@ class batched_QM9(qm9.QM9):
 
     def processed_file_names(self) -> str:
         return 'data_v3.pt'
+
     def reshuffle_grouped_dataset(self):
         for _, group in self.grouped_data:
             random.shuffle(group)
@@ -130,15 +132,13 @@ def qm9_datawork(
     data_point_num = [110000, 10000]
     train_data_num, val_data_num = data_point_num
     test_data_num = all_data_num - train_data_num - val_data_num
+    
     # random_split indices according to data_point_num
     train_indices, val_indices, test_indices = random_split(range(all_data_num), [train_data_num, val_data_num, test_data_num]) 
     train_indices, val_indices, test_indices = list(train_indices), list(val_indices), list(test_indices)
     train_batch_size, val_batch_size, test_batch_size = batch_size
     
-
- 
-    collate = lambda data_list: collate_fn(data_list, name)
-    
+    collate = lambda data_list: collate_(data_list, name)
     
     train_dataset, val_dataset, test_dataset = (
         QM9_dataset_group_partial(indices=train_indices, batch_size=train_batch_size),
@@ -153,13 +153,11 @@ def qm9_datawork(
         DataLoader(test_dataset, num_workers=4, batch_size=1, persistent_workers=False, shuffle=False, collate_fn=collate),
     )
     
-
-        
-    
     # calculate global mean and std
     all_dataset = train_dataset + val_dataset + test_dataset
     global_y_mean = torch.cat([all_dataset[i].y for i in range(len(all_dataset))], dim=0).mean(dim=0).squeeze()[name]
     global_y_std = torch.cat([all_dataset[i].y for i in range(len(all_dataset))], dim=0).std(dim=0).squeeze()[name]
     
     return train_dataloader, val_dataloader, test_dataloader, global_y_mean, global_y_std
+
 

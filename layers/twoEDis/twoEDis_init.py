@@ -32,8 +32,6 @@ class TwoEDisInit(nn.Module):
             activation_fn=None
         )
 
-        
-        
         self.pattern_embedding = nn.Embedding(
             num_embeddings=3,
             embedding_dim=k_tuple_dim,

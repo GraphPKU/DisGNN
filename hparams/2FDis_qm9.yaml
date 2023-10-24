@@ -18,11 +18,11 @@ scheduler_config:
     RLROP_cooldown: 10
     RLROP_threshold: 0.001
     EXLR_gamma: 0.999
-    warmup_epoch: 3
+    warmup_epoch: 5
 
 
 optimizer_config:
-    learning_rate: 0.0003
+    learning_rate: 0.0005
     gradient_clip_val: 10
     ema_decay: 0.99
     weight_decay: 0.
@@ -38,4 +38,6 @@ model_config:
     ef_dim: 32
     k_tuple_dim: 512
     block_num: 5
-    interaction_residual: true
+    activation_fn_name: ssp
+    interaction_residual: false
+    use_mult_lin: True

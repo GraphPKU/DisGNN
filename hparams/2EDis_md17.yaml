@@ -3,7 +3,7 @@ global_config:
     seed: 0
 
 trainer_config:
-    max_epochs: 6000
+    max_epochs: 8000
     validation_interval: 2
     early_stopping_patience: 100
 

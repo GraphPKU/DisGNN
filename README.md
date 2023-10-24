@@ -18,7 +18,7 @@ torch_geometric=2.3.0
 To train and test k-DisGNN, run 
 
 ```bash
-python scripts/train_test_scripts.py [--model <model_name>] [--ds <dataset_name>] [--dname <data_name>] [--devices <device_ids>] [--data_dir <data_dir>] [--version <version>] [--resume] [--only_test] [--ckpt <checkpoint_path>] [--merge <merge hparam list>]
+python scripts/train_test_scripts.py [--model <model_name>] [--ds <dataset_name>] [--dname <data_name>] [--devices <device_ids>] [--data_dir <data_dir>] [--version <version>] [--resume] [--only_test] [--ckpt <checkpoint_path>] [--merge <merge hparam list>] [--use_wandb] [--proj_name <project_name>]
 ```
 
 Arguments description:
@@ -33,12 +33,14 @@ Arguments description:
 + --only_test: Whether to only test the model. By default, it is False.
 + --ckpt: The path of the checkpoint. By default, it is None.
 + --merge: The hparams to merge. For example, if you want to modify the hparam model_config.block_num to 4, then use --merge model_config.block_num 4.
++ --use_wandb: Whether to use wandb to log the training process. By default, it is False.
++ --proj_name: The name of the project in wandb. By default, it is None.
 
 Hyperparameters are specified in the dictionary `hparams`.
 
-For example, to run 2FDis on MD17 (ethanol) using gpu 0:
+For example, to run 2FDis on revised MD17 (revised ethanol) using gpu 0:
 ```bash
-python scripts/train_test_scripts.py --model 2FDis --ds md17 --dname ethanol --devices 0 --data_dir <your_data_dir> --version test 
+python scripts/train_test_scripts.py --model 2FDis --ds md17 --dname 'revised ethanol' --devices 0 --data_dir <your_data_dir> --version test 
 ```
 
 

@@ -22,7 +22,13 @@ class TwoOrderOutputBlock(nn.Module):
                 hidden_dim=2 * hidden_dim,
                 activation_fn=activation_fn,
                 bias=True,
-                add_end_activation=False
+                ),
+            Residual(
+                mlp_num=2,
+                hidden_dim=2 * hidden_dim,
+                activation_fn=activation_fn,
+                add_end_activation=False,
+                bias=True,
                 ),
             Dense(
                 in_features=2 * hidden_dim,
@@ -76,14 +82,22 @@ class TwoOrderDipOutputBlock(nn.Module):
                 hidden_dim=hidden_dim,
                 activation_fn=activation_fn,
                 bias=True,
-                use_layer_norm=True
+                # use_layer_norm=True 
                 ),
             Residual(
                 mlp_num=2,
                 hidden_dim=hidden_dim,
                 activation_fn=activation_fn,
                 bias=True,
-                use_layer_norm=True
+                # use_layer_norm=True
+                ),
+            Residual(
+                mlp_num=2,
+                hidden_dim=hidden_dim,
+                activation_fn=activation_fn,
+                bias=True,
+                add_end_activation=False
+                # use_layer_norm=True
                 ),
             Dense(
                 in_features=hidden_dim,
@@ -126,6 +140,13 @@ class TwoOrderElcOutputBlock(nn.Module):
         self.act = nn.Softplus()
         
         self.output_fn = nn.Sequential(
+            Residual(
+                mlp_num=2,
+                hidden_dim=hidden_dim,
+                activation_fn=activation_fn,
+                bias=True,
+                use_layer_norm=True 
+                ),
             Residual(
                 mlp_num=2,
                 hidden_dim=hidden_dim,
