@@ -36,6 +36,8 @@ def group_same_size(
             else:
                 grouped_dataset.append((last_data.z.shape[0], group))
                 group = [data]
+    if len(group) != 0:
+        grouped_dataset.append((group[0].z.shape[0], group))
     return grouped_dataset
 
 def batch_same_size(
