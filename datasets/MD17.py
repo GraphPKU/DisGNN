@@ -94,7 +94,7 @@ def md17_datawork(
     
     # get dataloaders
     train_dataloader, val_dataloader, test_dataloader = (
-        DataLoader(train_dataset, num_workers=8, batch_size=train_batch_size, persistent_workers=True, shuffle=True, collate_fn=collate),
+        DataLoader(train_dataset, num_workers=4, batch_size=train_batch_size, persistent_workers=True, shuffle=True, collate_fn=collate),
         DataLoader(val_dataset, num_workers=4, batch_size=val_batch_size, persistent_workers=True, shuffle=False, collate_fn=collate),
         DataLoader(test_dataset, num_workers=4, batch_size=test_batch_size, persistent_workers=True, shuffle=False, collate_fn=collate),
     )

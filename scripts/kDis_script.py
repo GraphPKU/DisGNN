@@ -1,6 +1,6 @@
 import torch
 import sys, os
-os.chdir("/home/lizian/codes/DisGNN_github")
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(".")
 import pytorch_lightning as pl
 import time
